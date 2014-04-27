@@ -1,0 +1,10 @@
+{
+    "name": "rfid-tracker",
+    "author": "Artifice, NFP",
+    "version": "0.0.1",
+    "description": "RFID attendence and student tracking system prototype",
+    "dependencies": {
+	"mongodb": "~1.3.23",
+	"mongoose": "~3.8.8"
+    }
+}
