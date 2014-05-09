@@ -22,16 +22,21 @@ db.once('open', function () {
 
 mongoose.connect('mongodb://localhost/test');
 
+function runQuery(query,lim,sorter,sel) {
+	var q = Attendance.find(query).sort(sorter).limit(lim);
+  return q.select(sel);
+}
+
 // Build and start server
 var dgram = require("dgram");
-var server = dgram.createSocket("udp4");
+var dserver = dgram.createSocket("udp4");
 
-server.on("error", function (err) {
+dserver.on("error", function (err) {
     console.log("Server error:\n" + err.stack);
-    server.close();
+    dserver.close();
 });
 
-server.on("message", function (msg, rinfo) {
+dserver.on("message", function (msg, rinfo) {
     var parsed = JSON.parse(msg);
     var date = new Date(parsed.TS * 1000);
     var hts = date.toLocaleDateString() + " " + date.toLocaleTimeString();
@@ -50,31 +55,28 @@ server.on("message", function (msg, rinfo) {
     
 });
 
-server.once("listening", function () {
-    var address = server.address();
+dserver.once("listening", function () {
+    var address = dserver.address();
     console.log("Server listening on " + address.address 
 		+ ":" + address.port);
 });
 
-server.bind(8080);
+dserver.bind(8080);
 
-
-// Express 
-
-// _ -> JSON object
-function get_last_login () {
-    var query = Attendance.find().sort('-unixTimestamp');
-    return query.select('cardID');
-}
-
-var express = require('express');
-var app = express();
-
-app.get('/', function (req, res) {
-    get_last_login().exec(function (err, data) {
-	console.log(data);
-	res.send(data[0].cardID);
-    });
+var net = require('net');
+var qserver = net.createServer(function(c) { //'connection' listener
+  console.log('server connected');
+  c.on('end', function() {
+    console.log('server disconnected');
+  });
+  c.on('data', function(msg) {
+    var queryReq = JSON.parse(msg);
+		runQuery(queryReq.query,queryReq.lim,queryReq.sorter,queryReq.sel).exec(function (err, data) {
+    	c.write(JSON.stringify(data));
+		}); 
+  });
+});
+qserver.listen(8124, function() { //'listening' listener
+  console.log('server bound');
 });
 
-app.listen(8000);
