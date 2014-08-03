@@ -8,12 +8,12 @@ db.on('error', console.error);
 db.once('open', function () {
     console.log("DB Access bound");
     var attendanceSchema = new mongoose.Schema({
-	deviceType: String,
-	deviceID: Number,
-	version: Number,
-	cardID: String,
-	unixTimestamp: Number,
-	humanTimestamp: String
+	    deviceType: String,
+	    deviceID: Number,
+	    version: Number,
+	    cardID: String,
+	    unixTimestamp: Number,
+	    humanTimestamp: String
     });
     Attendance = mongoose.model('Attendance', attendanceSchema);
 });
@@ -41,23 +41,23 @@ dserver.on("message", function (msg, rinfo) {
     var date = new Date(parsed.TS * 1000);
     var hts = date.toLocaleDateString() + " " + date.toLocaleTimeString();
     var attend = new Attendance({
-	deviceType: parsed.DTY,
-	deviceID: parsed.DID,
-	version: parsed.VN,
-	cardID: parsed.CID,
-	unixTimestamp: parsed.TS,
-	humanTimestamp: hts
+	    deviceType: parsed.DTY,
+	    deviceID: parsed.DID,
+	    version: parsed.VN,
+	    cardID: parsed.CID,
+	    unixTimestamp: parsed.TS,
+	    humanTimestamp: hts
 	});
     attend.save(function (err, attend) {
-	if (err) return console.error(err);
-	console.log("I'm writing: \n " + attend + "\n to the database.");
+	    if (err) return console.error(err);
+	    console.log("I'm writing: \n " + attend + "\n to the database.");
 	});
-    
+
 });
 
 dserver.once("listening", function () {
     var address = dserver.address();
-    console.log("Server listening on " + address.address 
+    console.log("Server listening on " + address.address
 		+ ":" + address.port);
 });
 
@@ -73,7 +73,7 @@ var qserver = net.createServer(function(c) { //'connection' listener
     var queryReq = JSON.parse(msg);
 		runQuery(queryReq.query,queryReq.lim,queryReq.sorter,queryReq.sel).exec(function (err, data) {
     	c.write(JSON.stringify(data));
-		}); 
+		});
   });
 });
 qserver.listen(8124, function() { //'listening' listener
