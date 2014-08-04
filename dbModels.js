@@ -97,10 +97,13 @@
   });
 
   mod.student = dModel.extend({
-      create : function(firstName, lastName, birthday, gender, studentID, programsAttended) {
+      create : function(firstName, middleName, lastName, birthday, gender, studentID, programsAttended) {
 	      self = Object.create(this);
-        self.firstName = firstName;
-        self.lastName = lastName;
+        self.name = {
+          first: firstName,
+          middle: middleName,
+          last: lastName
+        },
         self.birthday = birthday;
         self.gender = gender;
         self.studentID = studentID;
@@ -112,12 +115,16 @@
       mongoData : {
     	  name : 'student',
 	      schema : {
-	        firstName : String,
-	        lastName : String,
+          name : {
+            first : String,
+            middle : String,
+            last : String
+          },
 	        birthday : Date, //?
 	        gender : String,
 	        studentID: String,
 	        programsAttended : [program],
+          medical : ObjectID
 	      }
       }
   });

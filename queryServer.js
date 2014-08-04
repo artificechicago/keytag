@@ -5,14 +5,20 @@ var queryServerPort = 8124;
 
 mongoose.connect('mongodb://localhost/test');
 
-function deserialize (msg) {
-  return 0;
-}
+function parseJSONQuery (qStruct) {
+  var q = new mongoose.Query;
+  var pQS = qStruct;
+  do {
+    if (pQS.op && pQS.args) {
+      try {
+      q.queryOPTable[pQS.op].apply(pQS.args);
+      } catch (e) {}
+    pQS = q.next;
+    } else { pQS = null; }
+  } while (pQS);
 
-function runQuery (query) {
-  return 0;
+  return q;
 }
-
 
 var qServer = net.createServer(function (conn) {
   console.log("Query Server started.");
@@ -22,8 +28,8 @@ var qServer = net.createServer(function (conn) {
   });
 
   conn.on('data', function (msg) {
-    var query = deserialize(msg);
-    runQuery(query)
+    var query = JSON.parse(msg);
+    var qObject = parseJSONQuery(query);
   })
 });
 
