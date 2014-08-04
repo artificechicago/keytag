@@ -27,7 +27,8 @@ function runQuery(query,lim,sorter,sel) {
   return q.select(sel);
 }
 
-// Build and start server
+// Build and start UDP Server
+// Handles incoming SwipeEvents from hardware login systems
 var dgram = require("dgram");
 var dserver = dgram.createSocket("udp4");
 
