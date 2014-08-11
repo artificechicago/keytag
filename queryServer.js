@@ -1,8 +1,4 @@
 var mongoose = require('mongoose');
-var net = require('net');
-
-var queryServerPort = 8124;
-
 mongoose.connect('mongodb://localhost/test');
 
 function parseJSONQuery (qStruct) {
