@@ -19,11 +19,14 @@ var http = require("http");
 
 http.createServer(function (req, res) {
   if (req.method == "POST" && req.url == "/query") {
+    // Query System Interface
     console.log("[200] " + req.method + " to " + req.url);
+    fullChunk = ""
 
     req.on('data', function(chunk) {
       console.log("Received body data:");
       console.log(JSON.stringify(JSON.parse(chunk)));
+      fullChunk += chunk;
     });
 
     req.on('end', function () {
