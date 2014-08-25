@@ -1,8 +1,14 @@
-
-// Set up database
-
 var mongoose = require('mongoose');
 var db = mongoose.connection;
+mongoose.connect('mongodb://localhost/test/');
+
+var queryService = require('./queryServer.js');
+var interfaces = require('./interfaces.js');
+
+queryService.parseJSONQuery({'op':'comment', 'args':[]})
+
+/*
+// Legacy code
 
 db.on('error', console.error);
 db.once('open', function () {
@@ -81,3 +87,4 @@ qserver.listen(8124, function() { //'listening' listener
   console.log('server bound');
 });
 
+*/

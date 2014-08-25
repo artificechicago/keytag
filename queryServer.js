@@ -1,66 +1,61 @@
 var mongoose = require('mongoose');
-//connection slated for removal
-mongoose.connect('mongodb://localhost/test');
+require("module");
+// mongoose automagically handles connections pools,
+// so this should be a connection object returned by
+/// mongoose.connect();
+exports.applyJSONQuery = function (qStruct, query) {
+  queryOPTable = {
+    "all" : query.and,
+    "and" : query.any,
+    "box" : query.box,
+    "circle" : query.circle,
+    "comment" : query.comment,
+    "elemMatch" : query.elemMatch,
+    "equals" : query.equals,
+    "exists" : query.exists,
+    "geometry" : query.geometry,
+    "gt" : query.gt,
+    "gte" : query.gte,
+    "hint" : query.hint,
+    "in" : query.in,
+    "intersects" : query.intersects,
+    "lean" : query.lean,
+    "limit" : query.limit,
+    "lt" : query.lt,
+    "lte" : query.lte,
+    "maxDistance" : query.maxDistance,
+    "maxScan" : query.maxScan,
+    "mod" : query.mod,
+    "ne" : query.ne,
+    "near" : query.near,
+    "nearSphere" : query.nearSphere,
+    "nin" : query.nin,
+    "nor" : query.nor,
+    "or" : query.or,
+    "polygon" : query.polygon,
+    "populate" : query.populate,
+    "regex" : query.regex,
+    "select" : query.select,
+    "size" : query.size,
+    "skip" : query.skip,
+    "slice" : query.slice,
+    "snapshot" : query.snapshot, // Double check this
+    "sort" : query.sort,
+    "where" : query.where,
+    "within" : query.within
+  };
 
-function (connPool) {
-  // connPool for extending to creating a pool for query access
-  function parseJSONQuery (qStruct) {
-    var q = Object.create(mongoose.Query);
-    q.queryOPTable = {
-      "all" : this.and,
-      "and" : this.any,
-      "box" : this.box,
-      "circle" : this.circle,
-      "comment" : this.comment,
-      "elemMatch" : this.elemMatch,
-      "equals" : this.equals,
-      "exists" : this.exists,
-      "geometry" : this.geometry,
-      "gt" : this.gt,
-      "gte" : this.gte,
-      "hint" : this.hint,
-      "in" : this.in,
-      "intersects" : this.intersects,
-      "lean" : this.lean,
-      "limit" : this.limit,
-      "lt" : this.lt,
-      "lte" : this.lte,
-      "maxDistance" : this.maxDistance,
-      "maxScan" : this.maxScan,
-      "mod" : this.mod,
-      "ne" : this.ne,
-      "near" : this.near,
-      "nearSphere" : this.nearSphere,
-      "nin" : this.nin,
-      "nor" : this.nor,
-      "or" : this.or,
-      "polygon" : this.polygon,
-      "populate" : this.populate,
-      "regex" : this.regex,
-      "select" : this.select,
-      "size" : this.size,
-      "skip" : this.skip,
-      "slice" : this.slice,
-      "snapshot" : this.snapshot, // Double check this
-      "sort" : this.sort,
-      "where" : this.where,
-      "within" : this.within
-    };
+  var pQS = qStruct;
+  do {
+    if (pQS.op && pQS.args) {
+      try {
+      queryOPTable[pQS.op].apply(pQS.args);
+      } catch (e) {}
+    pQS = pQS.next;
+    } else { pQS = null; }
+  } while (pQS);
 
-    var pQS = qStruct;
-    do {
-      if (pQS.op && pQS.args) {
-        try {
-        q.queryOPTable[pQS.op].apply(pQS.args);
-        } catch (e) {}
-      pQS = q.next;
-      } else { pQS = null; }
-    } while (pQS);
-
-    return q;
-  }
-
-  return parseJSONQuery;
+  return query;
 }
 
 /* Outdated logic TBR when connPool and export logic is finished
