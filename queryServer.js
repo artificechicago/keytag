@@ -49,7 +49,7 @@ exports.applyJSONQuery = function (qStruct, query) {
   do {
     if (pQS.op && pQS.args) {
       try {
-      queryOPTable[pQS.op].apply(pQS.args);
+      queryOPTable[pQS.op].apply(query, pQS.args);
       } catch (e) {}
     pQS = pQS.next;
     } else { pQS = null; }
