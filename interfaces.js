@@ -1,56 +1,67 @@
-(function () {
-  mod = {};
+function Interfaces () {
+  this.modelTable = null;
+  this.dbHandler = null;
+  this.querySystem = null;
+}
 
-  mod.startUDPInterface = function (port) {
+Interfaces.prototype.configure = function configure (modelTable, dbHandler, querySystem) {
+  this.modelTable = modelTable;
+  this.dbHandler = dbHandler;
+  this.querySystem = querySystem;
+}
 
-    // UDP Interface
-    var dgram = require("dgram");
-    var server = dgram.createSocket("udp4");
+Interfaces.prototype.startUDPInterface = function startUDPInterface(port) {
 
-    server.on("error", function (err) {
-      console.log("Server error:\n" + err.stack);
-      server.close();
-    });
+  // UDP Interface
+  var dgram = require("dgram");
+  var server = dgram.createSocket("udp4");
 
-    server.on("message", function (msg, rinfo) {
-      var parsed = JSON.parse(msg);
-      console.log("TEST: Recieved " + JSON.stringify(parsed)
-                + " on " + rinfo.address + ":" + rinfo.port);
-    });
+  server.on("error", function (err) {
+    console.log("Server error:\n" + err.stack);
+    server.close();
+  });
 
-    server.listen(port);
-  }
+  server.on("message", function (msg, rinfo) {
+    var parsed = JSON.parse(msg);
+    console.log("TEST: Recieved " + JSON.stringify(parsed)
+              + " on " + rinfo.address + ":" + rinfo.port);
+  });
 
-  mod.startHTTPInterface = function (port) {
+  server.listen(port);
+}
 
-    // HTTP Interface
-    var http = require("http");
+Interfaces.prototype.startHTTPInterface = function startHTTPInterface(port) {
 
-    http.createServer(function (req, res) {
-      if (req.method == "POST" && req.url == "/query") {
-        // Query System Interface
-        console.log("[200] " + req.method + " to " + req.url);
-        fullChunk = ""
+  // HTTP Interface
+  var http = require("http");
 
-        req.on('data', function(chunk) {
-          console.log("Received body data:");
-          console.log(JSON.stringify(JSON.parse(chunk)));
-          fullChunk += chunk;
-        });
+  http.createServer(function (req, res) {
+    if (req.method == "POST" && req.url == "/query") {
+      // Query System Interface
+      console.log("[200] " + req.method + " to " + req.url);
+      fullChunk = ""
 
-        req.on('end', function () {
-          res.writeHead(200, {'Content-Type' : 'text/plain'});
-          res.end("You've asked for data!  But you got me instead...\n");
-        });
-      } else {
-        res.writeHead(200, {'Content-Type': 'text/plain'});
-        res.end("No services here...\n");
-      }
-    }).listen(port);
-    console.log('Server running at http://localhost:' + port + '/');
-  };
+      req.on('data', function(chunk) {
+        console.log("Received body data:");
+        console.log(JSON.stringify(JSON.parse(chunk)));
+        fullChunk += chunk;
+      });
 
-  return mod;
+      req.on('end', function () {
+        res.writeHead(200, {'Content-Type' : 'text/plain'});
+        res.end("You've asked for data!  But you got me instead...\n");
+      });
+    } else {
+      res.writeHead(200, {'Content-Type': 'text/plain'});
+      res.end("No services here...\n");
+    }
+  }).listen(port);
+  console.log('Server running at http://localhost:' + port + '/');
+};
 
-  // WebSocket Interface
-})();
+
+// WebSocket Interface
+
+// Export Singleton
+
+module.exports = exports = new Interfaces();

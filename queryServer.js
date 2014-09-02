@@ -1,9 +1,10 @@
 var mongoose = require('mongoose');
-require("module");
+var querySystem = exports;
+
 // mongoose automagically handles connections pools,
 // so this should be a connection object returned by
 /// mongoose.connect();
-exports.applyJSONQuery = function (qStruct, query) {
+querySystem.applyJSONQuery = function (qStruct, query) {
   queryOPTable = {
     "all" : query.and,
     "and" : query.any,
