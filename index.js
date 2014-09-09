@@ -29,10 +29,11 @@ modelTable.student = mongoose.model('Student',
                                      cardID : String,
                                    })));
 
+dbHandle = {}; // Placeholder for DBWriter service
+
 interfaces.configure(modelTable, dbHandle, queryService);
 interfaces.startUDPInterface(8080);
 interfaces.startHTTPInterface(8081);
-
 
 /*
 // Legacy code
