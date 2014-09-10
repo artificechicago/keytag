@@ -14,6 +14,7 @@ querySystem.applyJSONQuery = function (qStruct, query) {
     "elemMatch" : query.elemMatch,
     "equals" : query.equals,
     "exists" : query.exists,
+    "find" : query.find,
     "geometry" : query.geometry,
     "gt" : query.gt,
     "gte" : query.gte,

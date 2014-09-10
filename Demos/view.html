@@ -1,15 +1,14 @@
 <!DOCTYPE HTML>
 <html>
     <head>
-        <style>
-            <link href="view_css.css" rel="stylesheet" type="text/css">
-        </style>
+        <link href="view_css.css" rel="stylesheet" type="text/css">
     </head>
 
     <body>
-        <h2 class="header">Relic Attendance Database Demo </h2>
-        <div class="record">
-            <p id="today_record">Today's Records</p>
+        <h2 class="header">Relic Attendance Database Demo Page</h2>
+        <div id="record_set">
+            <h3 id="record_set_header">Today's Records</h3>
+            <p id="loading_notice">Loading...</p>
         </div>
         <div class="footer">
             <p>Background image by
@@ -19,9 +18,39 @@
     </body>
 
     <script>
-        var testArr = ["Line1", "Line2", "Line3"];
-        for (var i = 0; i < testArr.length; i++) {
-        document.getElementById("today_record").innerHTML += "<p>" + testArr[i] + "</p>";
-        }
+        var req = new XMLHttpRequest();
+        req.onloadend = function () {
+
+            try {
+                var remove_me = document.getElementById("loading_notice");
+            } catch (e) {}
+
+            if (req.readyState === 4 && req.status === 200 ) {
+                remove_me.parentNode.removeChild(remove_me);
+                var data = JSON.parse(req.responseText);
+                for (var i = 0; i < data.length; i++) {
+                document.getElementById("record_set").innerHTML +=
+                    "<p>" + data[i].cardID  + "   " + data[i].humanTimestamp + "</p>";
+                }
+            }
+            else {
+                remove_me.parentNode.removeChild(remove_me);
+                document.getElementById("record_set").innerHTML +=
+                    "<p>There was an error contacting the server.</p>";
+            }
+
+        };
+        console.log(req);
+        req.open("POST", "http://localhost:8081/query", true);
+        req.setRequestHeader("Content-Type", "application/json");
+        var authCred = "Basic " + window.btoa("user:pass");
+        req.setRequestHeader("Authorization", authCred)
+        req.send(JSON.stringify(
+            {'model' : 'attendance',
+             'query' : {'op': 'find',
+                        'args' : []
+                       }
+            }
+        ));
     </script>
 </html>
