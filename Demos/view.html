@@ -1,0 +1,27 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <style>
+            <link href="view_css.css" rel="stylesheet" type="text/css">
+        </style>
+    </head>
+
+    <body>
+        <h2 class="header">Relic Attendance Database Demo </h2>
+        <div class="record">
+            <p id="today_record">Today's Records</p>
+        </div>
+        <div class="footer">
+            <p>Background image by
+                <a href="http://flickr.com/people/90782025@N00">Mike Boehmer</a>
+            </p>
+        </div>
+    </body>
+
+    <script>
+        var testArr = ["Line1", "Line2", "Line3"];
+        for (var i = 0; i < testArr.length; i++) {
+        document.getElementById("today_record").innerHTML += "<p>" + testArr[i] + "</p>";
+        }
+    </script>
+</html>

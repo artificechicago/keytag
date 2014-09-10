@@ -1,0 +1,50 @@
+html {
+  background:
+    linear-gradient(
+      rgba(40,60,60,0.2),
+      rgba(40,60,60,0.8)
+    ) no-repeat center center fixed,
+    url('chi.jpg') no-repeat center center fixed;
+  background-size: cover;
+}
+
+h2.header {
+  background-color: rgba(47, 79, 79, 0.7);
+  width: 60%;
+  margin-left: 20%;
+  margin-right: 20%;
+  top: 30 px;
+  text-align: center;
+  color: black;
+  font-family: Arial;
+  box-shadow: 1px 1px 5px black;
+  border-radius: 5px;
+}
+
+.record {
+  border-radius: 5px;
+  background: rgba(176, 196, 222, 0.7);
+  width: 70%;
+  margin-left: 15%;
+  margin-top: 30px;
+  font-family: Arial;
+  box-shadow: 1px 1px 5px black;
+}
+
+#today_record {
+  text-align: center;
+  padding-top: 6px;
+  padding-bottom: 1px;
+}
+
+.footer {
+  font-size: 8px;
+  width: 100%;
+  bottom: 0;
+  height: 20px;
+  position: fixed;
+  background: cadetblue;
+  text-align: center;
+  font-family: Arial;
+  margin-left: -10px;
+}
